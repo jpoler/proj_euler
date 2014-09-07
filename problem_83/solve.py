@@ -20,6 +20,16 @@ class PriorityQueue:
     comparators defined so that we can compare objects with the
     operators <, >, <=, or >=.
     """
+    def __getitem__(self, key):
+        """This is going to be used to create a layer of abstraction,
+        so that we can pretend our indexes are between 1 and n instead of
+        0 and n-1
+        """
+        return self.heap[key-1]
+
+    def __setitem__(self, key, value):
+        self.heap[key-1] = value
+    
     def __init__(self):
         """Creates an empty min-heap."""
         self.heap = []
@@ -33,7 +43,7 @@ class PriorityQueue:
 
     def end_heap(self):
         """The last element of the heap is at index n - 1."""
-        return len(self) - 1
+        return len(self)
 
     def parent(self, i):
         """Returns the index of the parent of the node index given."""
@@ -59,14 +69,14 @@ class PriorityQueue:
         lowest = i
         r = self.right(i)
         l = self.left(i)
-        if (l <= self.end_heap()) and (self.heap[i] > self.heap[l]):
+        if (l <= self.end_heap()) and (self[i] > self[l]):
             lowest = l
-        if (r <= self.end_heap()) and (self.heap[lowest] > self.heap[r]):
+        if (r <= self.end_heap()) and (self[lowest] > self[r]):
             lowest = r
         if lowest != i:
-            temp = self.heap[i]
-            self.heap[i] = self.heap[lowest]
-            self.heap[lowest] = temp
+            temp = self[i]
+            self[i] = self[lowest]
+            self[lowest] = temp
             self.min_heapify(lowest)
 
     def min(self):
@@ -77,7 +87,7 @@ class PriorityQueue:
         """
         if len(self) <= 0:
             raise ValueError('Cannot call min on an empty heap')
-        return self.heap[0]
+        return self[1]
 
     def extract_min(self):
         """We can extract the min element in O(lgn) time by switching
@@ -88,24 +98,24 @@ class PriorityQueue:
         """
         if len(self) <= 0:
             raise ValueError('Cannot call pop on an empty heap')
-        min = self.heap[0]
-        self.heap[0] = self.heap[self.end_heap()]
+        min = self[1]
+        self[1] = self[self.end_heap()]
         self.heap.pop()
-        self.min_heapify(0)
+        self.min_heapify(1)
         return min
 
     def insert(self, obj):
         """Insert an element into the queue by placing it at the end
         and increasing its position until it obeys the min-heap property.
-        """
+pppp        """
         self.heap.append(obj)
         c = self.end_heap()
         p = self.parent(c)
-        while (c > 0) & (obj < self.heap[p]):
-            self.heap[c] = self.heap[p]
+        while (p >= 1) and (obj < self[p]):
+            self[c] = self[p]
             c = p
             p = self.parent(p)
-        self.heap[c] = obj
+        self[c] = obj
 
 
 class Matrix:
