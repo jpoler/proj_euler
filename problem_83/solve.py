@@ -107,7 +107,7 @@ class PriorityQueue:
     def insert(self, obj):
         """Insert an element into the queue by placing it at the end
         and increasing its position until it obeys the min-heap property.
-pppp        """
+        """
         self.heap.append(obj)
         c = self.end_heap()
         p = self.parent(c)
